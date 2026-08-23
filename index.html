@@ -1,0 +1,1846 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>RAM — Creative Portfolio</title>
+
+<style>
+*{
+  box-sizing:border-box;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  margin:0;
+  background:#050505;
+  color:#f5efe3;
+  font:14px Arial,sans-serif;
+}
+
+a{
+  text-decoration:none;
+  color:inherit;
+}
+
+.wrap{
+  width:min(1180px,90%);
+  margin:auto;
+}
+
+.gold,
+.eyebrow{
+  color:#d9a83b;
+}
+
+
+/* ================= HEADER ================= */
+
+header{
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  z-index:20;
+
+  padding:18px 5%;
+
+  background:#050505e8;
+  border-bottom:1px solid #d9a83b30;
+
+  backdrop-filter:blur(14px);
+
+  display:flex;
+  align-items:center;
+}
+
+.logo{
+  font:bold 30px Georgia;
+  color:#d9a83b;
+  letter-spacing:4px;
+  margin-right:auto;
+}
+
+nav{
+  display:flex;
+  gap:25px;
+
+  font-size:10px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+}
+
+nav a:hover{
+  color:#d9a83b;
+}
+
+.btn{
+  display:inline-block;
+
+  background:#d9a83b;
+  color:#111;
+
+  padding:14px 20px;
+
+  font-weight:700;
+  font-size:10px;
+  letter-spacing:1px;
+
+  margin-left:25px;
+}
+
+
+/* ================= HERO ================= */
+
+.hero{
+  min-height:100vh;
+
+  padding:170px 7% 100px;
+
+  display:flex;
+  justify-content:center;
+  flex-direction:column;
+
+  background:
+    radial-gradient(
+      circle at 75% 50%,
+      #2b200e,
+      #050505 48%
+    );
+}
+
+.hero h1{
+  font:600 clamp(55px,9vw,105px)/.86 Georgia;
+
+  max-width:900px;
+
+  margin:20px 0;
+}
+
+.hero h1 em,
+h2 em{
+  color:#d9a83b;
+}
+
+.lead{
+  max-width:580px;
+
+  color:#888;
+
+  line-height:1.8;
+}
+
+.hero-actions{
+  margin-top:30px;
+}
+
+.outline{
+  display:inline-block;
+
+  border:1px solid #8c6b2d;
+
+  padding:13px 20px;
+
+  margin-left:8px;
+
+  font-size:10px;
+  letter-spacing:1px;
+}
+
+
+/* ================= STATS ================= */
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+
+  padding:28px 7%;
+
+  border-block:1px solid #2b2115;
+
+  text-align:center;
+}
+
+.stats b{
+  font:38px Georgia;
+  color:#d9a83b;
+}
+
+.stats small{
+  display:block;
+
+  color:#777;
+
+  font:10px Arial;
+
+  letter-spacing:2px;
+
+  margin-top:7px;
+}
+
+
+/* ================= SECTIONS ================= */
+
+section{
+  padding:105px 7%;
+}
+
+.heading{
+  text-align:center;
+}
+
+.heading h2,
+h2{
+  font:600 clamp(45px,6vw,68px) Georgia;
+
+  margin:12px 0;
+}
+
+.muted{
+  color:#888;
+  line-height:1.8;
+}
+
+
+/* ================= PROJECT GRID ================= */
+
+.projects{
+  display:grid;
+
+  grid-template-columns:1fr 1fr;
+
+  gap:18px;
+
+  margin-top:45px;
+}
+
+
+/* ================= PROJECT CARD ================= */
+
+.project{
+
+  min-height:360px;
+
+  padding:0;
+
+  position:relative;
+
+  overflow:hidden;
+
+  border:1px solid #352915;
+
+  background:
+    linear-gradient(
+      135deg,
+      #2b1f0c,
+      #0a0a0a
+    );
+
+  display:flex;
+
+  flex-direction:column;
+}
+
+
+/* ================= PROJECT IMAGE ================= */
+
+.project-media{
+
+  height:210px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #2b1f0c,
+      #090909
+    );
+
+  overflow:hidden;
+
+  position:relative;
+}
+
+.project-media img{
+
+  width:100%;
+  height:100%;
+
+  object-fit:cover;
+
+  display:block;
+
+  transition:
+    transform .7s ease,
+    filter .7s ease;
+}
+
+.project:hover .project-media img{
+
+  transform:scale(1.06);
+
+  filter:brightness(1.08);
+}
+
+
+/* ================= NO IMAGE ================= */
+
+.project-no-image{
+
+  height:100%;
+
+  display:grid;
+
+  place-items:center;
+
+  color:#6d5a35;
+
+  font:34px Georgia;
+}
+
+
+/* ================= PROJECT BODY ================= */
+
+.project-body{
+
+  padding:25px 28px 28px;
+
+  display:flex;
+
+  flex:1;
+
+  flex-direction:column;
+}
+
+.project-category{
+
+  color:#d9a83b;
+
+  font-size:10px;
+
+  letter-spacing:2px;
+}
+
+.project h3{
+
+  font:32px Georgia;
+
+  margin:15px 0 8px;
+}
+
+.project .muted{
+  margin:0;
+}
+
+
+/* ================= LIVE BUTTON ================= */
+
+.project-actions{
+
+  margin-top:auto;
+
+  padding-top:20px;
+}
+
+.project-btn{
+
+  display:inline-block;
+
+  border:1px solid #8c6b2d;
+
+  color:#e5bd63;
+
+  padding:11px 15px;
+
+  font-size:9px;
+
+  font-weight:800;
+
+  letter-spacing:1.5px;
+
+  transition:.25s;
+}
+
+.project-btn:hover{
+
+  background:#d9a83b;
+
+  color:#111;
+}
+
+
+/* ================= LOADING ================= */
+
+.project-loading,
+.project-error{
+
+  grid-column:1/-1;
+
+  text-align:center;
+
+  padding:40px;
+
+  color:#8c6b2d;
+
+  border:1px solid #302617;
+
+  background:#0b0b0b;
+}
+
+
+/* ================= ABOUT ================= */
+
+.dark{
+  background:#0d0d0d;
+}
+
+
+/* ================= SERVICES ================= */
+
+.services{
+
+  display:grid;
+
+  grid-template-columns:
+    repeat(4,1fr);
+
+  gap:12px;
+
+  margin-top:40px;
+}
+
+.service{
+
+  border:1px solid #352915;
+
+  padding:35px 18px;
+
+  text-align:center;
+
+  color:#d5b96f;
+
+  font-size:10px;
+
+  letter-spacing:2px;
+}
+
+
+/* ================= CONTACT ================= */
+
+.contact{
+
+  text-align:center;
+
+  background:
+    linear-gradient(
+      #090909,
+      #1b1205
+    );
+}
+
+form{
+
+  max-width:650px;
+
+  margin:35px auto;
+
+  display:grid;
+
+  gap:12px;
+
+  text-align:left;
+}
+
+input,
+textarea{
+
+  width:100%;
+
+  padding:15px;
+
+  background:#080808;
+
+  border:1px solid #3b2c18;
+
+  color:#fff;
+
+  outline:none;
+}
+
+button{
+  cursor:pointer;
+  border:0;
+}
+
+.formbtn{
+
+  background:#d9a83b;
+
+  color:#111;
+
+  padding:15px;
+
+  font-weight:700;
+}
+
+
+/* ================= FOOTER ================= */
+
+footer{
+
+  text-align:center;
+
+  padding:28px;
+
+  color:#666;
+
+  border-top:1px solid #2a2115;
+}
+
+footer a{
+
+  color:#d9a83b;
+
+  margin-left:15px;
+}
+
+
+/* ================= INTRO ================= */
+
+#intro{
+
+  position:fixed;
+
+  inset:0;
+
+  background:#050505;
+
+  z-index:99;
+
+  display:grid;
+
+  place-items:center;
+
+  pointer-events:none;
+
+  animation:
+    hide .7s ease 2.6s forwards;
+}
+
+#intro b{
+
+  font:
+    700
+    clamp(100px,23vw,290px)
+    Georgia;
+
+  letter-spacing:8px;
+
+  background:
+    linear-gradient(
+      #fff2bf,
+      #d9a83b,
+      #83570e
+    );
+
+  -webkit-background-clip:text;
+
+  color:transparent;
+
+  transform:translateY(110vh);
+
+  animation:
+    rise 1.8s
+    cubic-bezier(.16,1,.3,1)
+    .2s forwards;
+}
+
+@keyframes rise{
+
+  to{
+    transform:translateY(0);
+  }
+
+}
+
+@keyframes hide{
+
+  to{
+    opacity:0;
+    visibility:hidden;
+  }
+
+}
+
+
+/* ================= OFFER TICKER ================= */
+
+.offer-ticker{
+
+  width:100%;
+
+  height:58px;
+
+  margin:35px 0 10px;
+
+  border:1px solid #6f5220;
+
+  background:#090909;
+
+  overflow:hidden;
+
+  position:relative;
+
+  display:flex;
+
+  align-items:center;
+}
+
+.offer-ticker:before,
+.offer-ticker:after{
+
+  content:"";
+
+  position:absolute;
+
+  top:0;
+  bottom:0;
+
+  width:70px;
+
+  z-index:2;
+
+  pointer-events:none;
+}
+
+.offer-ticker:before{
+
+  left:0;
+
+  background:
+    linear-gradient(
+      90deg,
+      #090909,
+      transparent
+    );
+}
+
+.offer-ticker:after{
+
+  right:0;
+
+  background:
+    linear-gradient(
+      270deg,
+      #090909,
+      transparent
+    );
+}
+
+.ticker-track{
+
+  display:flex;
+
+  align-items:center;
+
+  width:max-content;
+
+  white-space:nowrap;
+
+  animation:
+    offerTickerMove
+    18s linear infinite;
+}
+
+.ticker-track span{
+
+  display:inline-flex;
+
+  align-items:center;
+
+  color:#e6bf62;
+
+  font:600 15px Georgia;
+
+  letter-spacing:1px;
+
+  padding:0 55px;
+}
+
+@keyframes offerTickerMove{
+
+  from{
+    transform:translateX(0);
+  }
+
+  to{
+    transform:translateX(-50%);
+  }
+
+}
+
+
+/* ================= PROOF ROTATOR ================= */
+
+.proof-rotator-wrap{
+
+  height:32px;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  gap:10px;
+
+  margin-bottom:4px;
+
+  overflow:hidden;
+}
+
+.proof-label{
+
+  font-size:9px;
+
+  letter-spacing:3px;
+
+  color:#d9a83b;
+
+  border:1px solid #5d451d;
+
+  padding:6px 9px;
+}
+
+.proof-rotator{
+
+  font:600 13px Georgia;
+
+  color:#f1d078;
+
+  display:inline-block;
+
+  min-width:155px;
+
+  text-align:left;
+}
+
+
+/* ================= OFFER SECTION ================= */
+
+.offer-section{
+
+  padding:32px 7%;
+
+  background:#090909;
+
+  border-block:1px solid #2b2115;
+
+  overflow:hidden;
+}
+
+.offer-strip{
+
+  max-width:1100px;
+
+  margin:auto;
+
+  min-height:70px;
+
+  border:1px solid #6e5220;
+
+  background:
+    linear-gradient(
+      90deg,
+      #171108,
+      #0c0c0c,
+      #171108
+    );
+
+  display:flex;
+
+  align-items:center;
+
+  gap:20px;
+
+  padding:12px 18px;
+}
+
+.offer-label{
+
+  flex:0 0 auto;
+
+  color:#111;
+
+  background:#d9a83b;
+
+  padding:8px 12px;
+
+  font-size:9px;
+
+  font-weight:800;
+
+  letter-spacing:2px;
+}
+
+.offer-viewport{
+
+  height:42px;
+
+  overflow:hidden;
+
+  flex:1;
+
+  position:relative;
+}
+
+.offer-rotator{
+
+  height:100%;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  color:#f1d078;
+
+  font:600 25px Georgia;
+
+  white-space:nowrap;
+}
+
+.offer-btn{
+
+  flex:0 0 auto;
+
+  color:#d9a83b;
+
+  font-size:9px;
+
+  font-weight:800;
+
+  letter-spacing:1px;
+}
+
+
+/* ================= MOBILE ================= */
+
+@media(max-width:700px){
+
+  nav{
+    display:none;
+  }
+
+  .hero{
+    padding:140px 7% 80px;
+  }
+
+  .hero h1{
+    font-size:55px;
+  }
+
+  .stats{
+
+    grid-template-columns:1fr 1fr;
+
+    gap:22px;
+  }
+
+  .projects,
+  .services{
+
+    grid-template-columns:1fr;
+  }
+
+  section{
+    padding:75px 7%;
+  }
+
+  .btn{
+
+    margin-left:0;
+
+    margin-top:10px;
+  }
+
+  .outline{
+
+    margin-left:0;
+
+    margin-top:10px;
+  }
+
+  .project-media{
+    height:200px;
+  }
+
+  .project h3{
+    font-size:28px;
+  }
+
+  .offer-strip{
+
+    gap:10px;
+
+    padding:10px;
+  }
+
+  .offer-rotator{
+    font-size:17px;
+  }
+
+  .offer-btn{
+    font-size:8px;
+  }
+
+  .offer-label{
+
+    font-size:8px;
+
+    padding:7px;
+  }
+
+}
+</style>
+
+
+<!-- SUPABASE -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<!-- YOUR SUPABASE CONFIG -->
+<script src="config.js"></script>
+
+</head>
+
+<body>
+
+
+<!-- INTRO -->
+
+<div id="intro">
+  <b>RAM</b>
+</div>
+
+
+<!-- HEADER -->
+
+<header>
+
+<a class="logo" href="#">
+RAM
+</a>
+
+<nav>
+
+<a href="#work">
+Work
+</a>
+
+<a href="#about">
+About
+</a>
+
+<a href="#services">
+Services
+</a>
+
+<a href="#contact">
+Contact
+</a>
+
+</nav>
+
+<a class="btn" href="#contact">
+LET'S TALK
+</a>
+
+</header>
+
+
+<!-- HERO -->
+
+<section class="hero">
+
+<p class="eyebrow">
+CREATIVE PORTFOLIO • 2026
+</p>
+
+<h1>
+Ideas into
+<em>Powerful</em>
+<br>
+Digital Experiences.
+</h1>
+
+<p class="lead">
+
+Modern websites, UI/UX, branding and
+creative digital experiences built with
+premium design and attention to detail.
+
+</p>
+
+<div class="hero-actions">
+
+<a class="btn" href="#work">
+VIEW MY WORK →
+</a>
+
+<a class="outline" href="#contact">
+START A PROJECT
+</a>
+
+</div>
+
+</section>
+
+
+<!-- STATS -->
+
+<div class="stats">
+
+<b>
+25+
+<small>
+PROJECTS
+</small>
+</b>
+
+<b>
+12+
+<small>
+BRANDS
+</small>
+</b>
+
+<b>
+3+
+<small>
+YEARS CREATING
+</small>
+</b>
+
+<b>
+100%
+<small>
+PASSION
+</small>
+</b>
+
+</div>
+
+
+<!-- WORK -->
+
+<section id="work">
+
+
+<div class="heading">
+
+<p class="eyebrow">
+SELECTED WORK
+</p>
+
+
+<div class="proof-rotator-wrap">
+
+<span class="proof-label">
+WEBSITE PROOF
+</span>
+
+<span
+id="proofRotator"
+class="proof-rotator">
+
+WEBSITE DESIGN
+
+</span>
+
+</div>
+
+
+<h2>
+Website
+<em>Proof</em>
+</h2>
+
+
+<p class="muted">
+
+Websites and digital experiences
+created for clients.
+
+</p>
+
+</div>
+
+
+<!-- MOVING OFFER -->
+
+<div class="offer-ticker">
+
+<div class="ticker-track">
+
+<span>
+🔥 SPECIAL OFFER — PREMIUM WEBSITE DESIGN
+</span>
+
+<span>
+🚀 BUSINESS WEBSITE — LIMITED OFFER
+</span>
+
+<span>
+✨ PORTFOLIO WEBSITE — SPECIAL PRICE
+</span>
+
+<span>
+💻 E-COMMERCE WEBSITE — START YOUR PROJECT
+</span>
+
+<span>
+🎯 UI/UX + DEVELOPMENT — AVAILABLE NOW
+</span>
+
+
+<span>
+🔥 SPECIAL OFFER — PREMIUM WEBSITE DESIGN
+</span>
+
+<span>
+🚀 BUSINESS WEBSITE — LIMITED OFFER
+</span>
+
+<span>
+✨ PORTFOLIO WEBSITE — SPECIAL PRICE
+</span>
+
+<span>
+💻 E-COMMERCE WEBSITE — START YOUR PROJECT
+</span>
+
+<span>
+🎯 UI/UX + DEVELOPMENT — AVAILABLE NOW
+</span>
+
+</div>
+
+</div>
+
+
+<!-- PROJECTS FROM ADMIN -->
+
+<div
+id="projectsGrid"
+class="projects">
+
+<div class="project-loading">
+
+Loading website projects...
+
+</div>
+
+</div>
+
+
+</section>
+
+
+<!-- OFFER -->
+
+<section
+id="offer"
+class="offer-section">
+
+<div class="offer-strip">
+
+<span class="offer-label">
+OFFER
+</span>
+
+
+<div class="offer-viewport">
+
+<div
+id="offerRotator"
+class="offer-rotator">
+
+🔥 Premium Website Packages Available Now
+
+</div>
+
+</div>
+
+
+<a
+class="offer-btn"
+href="#contact">
+
+GET OFFER →
+
+</a>
+
+</div>
+
+</section>
+
+
+<!-- ABOUT -->
+
+<section
+id="about"
+class="dark">
+
+<div class="wrap">
+
+<p class="eyebrow">
+ABOUT RAM
+</p>
+
+<h2>
+Design with
+<em>purpose.</em>
+</h2>
+
+<p class="muted">
+
+I create modern, premium and memorable
+digital experiences by combining design,
+technology and visual storytelling.
+
+</p>
+
+</div>
+
+</section>
+
+
+<!-- SERVICES -->
+
+<section id="services">
+
+<div class="heading">
+
+<p class="eyebrow">
+WHAT I DO
+</p>
+
+<h2>
+Creative
+<em>Services</em>
+</h2>
+
+</div>
+
+
+<div class="services">
+
+<div class="service">
+WEB DEVELOPMENT
+</div>
+
+<div class="service">
+UI / UX DESIGN
+</div>
+
+<div class="service">
+BRANDING
+</div>
+
+<div class="service">
+CREATIVE CONTENT
+</div>
+
+</div>
+
+</section>
+
+
+<!-- CONTACT -->
+
+<section
+id="contact"
+class="contact">
+
+<p class="eyebrow">
+MESSAGE ME
+</p>
+
+<h2>
+Start a
+<em>Project</em>
+</h2>
+
+<p class="muted">
+
+Send your name, mobile number,
+email and project details.
+
+</p>
+
+
+<form
+onsubmit="
+event.preventDefault();
+alert('Message request submitted.');
+this.reset();
+">
+
+<input
+required
+placeholder="Your Name">
+
+<input
+required
+placeholder="Mobile Number">
+
+<input
+required
+type="email"
+placeholder="Email Address">
+
+<textarea
+required
+rows="5"
+placeholder="Message / Project Details">
+</textarea>
+
+<button class="formbtn">
+
+SEND MESSAGE →
+
+</button>
+
+</form>
+
+</section>
+
+
+<!-- FOOTER -->
+
+<footer>
+
+© 2026 RAM — Creative Portfolio
+
+<a href="admin.html">
+ADMIN PANEL
+</a>
+
+</footer>
+
+
+
+<!-- ================= PROJECT DATABASE ================= -->
+
+<script>
+
+const esc = value => {
+
+return String(value ?? "")
+.replace(
+  /[&<>"']/g,
+  match => ({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#039;"
+  }[match])
+);
+
+};
+
+
+const pick = (obj, keys) => {
+
+for(const key of keys){
+
+if(
+  obj &&
+  obj[key] !== undefined &&
+  obj[key] !== null &&
+  String(obj[key]).trim() !== ""
+){
+
+return obj[key];
+
+}
+
+}
+
+return "";
+
+};
+
+
+
+async function loadProjects(){
+
+const grid =
+document.getElementById(
+  "projectsGrid"
+);
+
+
+try{
+
+
+/* CHECK SUPABASE */
+
+if(
+  !window.supabase ||
+  !window.SUPABASE_URL ||
+  !window.SUPABASE_ANON_KEY
+){
+
+throw new Error(
+  "Missing Supabase configuration"
+);
+
+}
+
+
+/* CONNECT */
+
+const db =
+window.supabase.createClient(
+  window.SUPABASE_URL,
+  window.SUPABASE_ANON_KEY
+);
+
+
+/* GET PUBLISHED PROJECTS */
+
+const {
+  data,
+  error
+} =
+await db
+.from("projects")
+.select("*")
+.eq("published", true)
+.order(
+  "sort_order",
+  {
+    ascending:true
+  }
+);
+
+
+if(error){
+
+throw error;
+
+}
+
+
+/* NO PROJECTS */
+
+if(
+  !data ||
+  !data.length
+){
+
+grid.innerHTML = `
+
+<div class="project-error">
+
+No published projects yet.
+
+</div>
+
+`;
+
+return;
+
+}
+
+
+/* RENDER */
+
+grid.innerHTML =
+data.map(project => {
+
+
+/* CATEGORY */
+
+const category =
+pick(
+  project,
+  [
+    "category"
+  ]
+) || "WEBSITE";
+
+
+/* TITLE */
+
+const title =
+pick(
+  project,
+  [
+    "title",
+    "name"
+  ]
+) || "Untitled Project";
+
+
+/* DESCRIPTION */
+
+const description =
+pick(
+  project,
+  [
+    "description",
+    "details"
+  ]
+) ||
+"Premium digital experience.";
+
+
+/* IMAGE */
+
+const image =
+pick(
+  project,
+  [
+    "image_url",
+    "imageUrl",
+    "image",
+    "image_src",
+    "thumbnail_url",
+    "thumbnail"
+  ]
+);
+
+
+/* LIVE URL */
+
+const live =
+pick(
+  project,
+  [
+    "live_url",
+    "liveUrl",
+    "url",
+    "project_url",
+    "website_url"
+  ]
+);
+
+
+/* IMAGE HTML */
+
+const media = image
+
+? `
+
+<img
+src="${esc(image)}"
+alt="${esc(title)}"
+loading="lazy"
+
+onerror="
+this.parentElement.innerHTML=
+'<div class=project-no-image>RAM</div>'
+">
+
+`
+
+:
+
+`
+
+<div class="project-no-image">
+
+RAM
+
+</div>
+
+`;
+
+
+/* LIVE BUTTON */
+
+const button = live
+
+? `
+
+<div class="project-actions">
+
+<a
+
+class="project-btn"
+
+href="${esc(live)}"
+
+target="_blank"
+
+rel="noopener noreferrer">
+
+VIEW LIVE WEBSITE →
+
+</a>
+
+</div>
+
+`
+
+: "";
+
+
+/* FINAL CARD */
+
+return `
+
+<article class="project">
+
+
+<div class="project-media">
+
+${media}
+
+</div>
+
+
+<div class="project-body">
+
+
+<span
+class="project-category">
+
+${esc(category)}
+
+</span>
+
+
+<h3>
+
+${esc(title)}
+
+</h3>
+
+
+<p class="muted">
+
+${esc(description)}
+
+</p>
+
+
+${button}
+
+
+</div>
+
+
+</article>
+
+`;
+
+}).join("");
+
+
+}
+
+catch(error){
+
+console.error(
+  "Project loading error:",
+  error
+);
+
+
+grid.innerHTML = `
+
+<div class="project-error">
+
+Projects could not be loaded
+right now.
+
+</div>
+
+`;
+
+}
+
+}
+
+
+/* START PROJECT LOAD */
+
+loadProjects();
+
+</script>
+
+
+
+<!-- ================= OFFERS ================= -->
+
+<script>
+
+async function loadOffers(){
+
+try{
+
+
+if(
+  !window.supabase ||
+  !window.SUPABASE_URL ||
+  !window.SUPABASE_ANON_KEY
+){
+
+return;
+
+}
+
+
+const db =
+window.supabase.createClient(
+  window.SUPABASE_URL,
+  window.SUPABASE_ANON_KEY
+);
+
+
+const {
+  data
+} =
+await db
+.from("offers")
+.select("*")
+.eq("enabled",true)
+.order(
+  "sort_order",
+  {
+    ascending:true
+  }
+);
+
+
+const offers =
+(data || [])
+.map(
+  item => item.text
+)
+.filter(Boolean);
+
+
+if(!offers.length){
+
+return;
+
+}
+
+
+const element =
+document.getElementById(
+  "offerRotator"
+);
+
+
+let index = 0;
+
+
+function showNextOffer(){
+
+element.textContent =
+offers[
+  index %
+  offers.length
+];
+
+index++;
+
+}
+
+
+showNextOffer();
+
+
+setInterval(
+  showNextOffer,
+  3500
+);
+
+
+}
+
+catch(error){
+
+console.error(
+  "Offer loading error:",
+  error
+);
+
+}
+
+}
+
+
+loadOffers();
+
+</script>
+
+
+
+<!-- ================= PROOF ROTATOR ================= -->
+
+<script>
+
+(function(){
+
+const element =
+document.getElementById(
+  "proofRotator"
+);
+
+
+const words = [
+
+"WEBSITE DESIGN",
+
+"E-COMMERCE WEBSITE",
+
+"BUSINESS WEBSITE",
+
+"EVENT WEBSITE",
+
+"PORTFOLIO WEBSITE",
+
+"UI / UX EXPERIENCE"
+
+];
+
+
+let index = 0;
+
+
+setInterval(
+
+() => {
+
+element.textContent =
+words[
+  index %
+  words.length
+];
+
+index++;
+
+},
+
+2400
+
+);
+
+})();
+
+</script>
+
+
+</body>
+</html>
