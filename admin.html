@@ -1,0 +1,775 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RAM — Full Website Admin</title>
+
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#070707;color:#eee;font:14px Arial,sans-serif}
+button,input,textarea{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+.gold{color:#d9a83b}
+
+/* LOGIN */
+.login{min-height:100vh;display:grid;place-items:center;background:radial-gradient(circle,#251b0b,#070707 55%)}
+.login-box{width:min(430px,92%);padding:42px;background:#101010;border:1px solid #5a421d;text-align:center}
+.logo{font:bold 38px Georgia;color:#d9a83b;letter-spacing:5px}
+.login-box p{color:#777;font-size:10px;letter-spacing:3px}
+.field{width:100%;padding:13px;margin:7px 0 15px;background:#080808;border:1px solid #392b16;color:#fff;outline:none}
+textarea.field{resize:vertical}
+.login-btn,.save-btn,.add-btn{width:100%;padding:13px;background:#d9a83b;color:#111;border:0;font-weight:800}
+.login-msg{color:#d77;margin-top:12px;font-size:12px}
+
+/* APP */
+.app{display:flex;min-height:100vh}
+.side{width:245px;background:#101010;border-right:1px solid #292116;padding:20px 12px;display:flex;flex-direction:column;gap:5px;flex-shrink:0}
+.side h2{font:30px Georgia;color:#d9a83b;margin:0 0 20px;padding:10px}
+.side button,.side a{background:none;border:0;color:#aaa;text-align:left;padding:12px;text-decoration:none}
+.side button:hover,.side a:hover,.side button.active{background:#1a150c;color:#e0b34d}
+.main{flex:1;min-width:0;padding:26px}
+.top{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #292116;padding-bottom:16px}
+.top h1{font:36px Georgia;margin:0}
+
+/* DASHBOARD */
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:20px}
+.card,.panel{background:#111;border:1px solid #302617;padding:22px}
+.card b{display:block;font:38px Georgia;color:#d9a83b;margin-bottom:7px}
+.panel{margin-top:18px}
+.panel h2{font:25px Georgia;color:#d9a83b;margin:0 0 15px}
+.hint,.small{color:#888;line-height:1.6}
+.small{font-size:11px}
+
+/* FORM */
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.item{padding:18px 0;border-bottom:1px solid #302617}
+.item:last-child{border-bottom:0}
+.item-title{font:21px Georgia;color:#d9a83b;margin-bottom:12px}
+.check{display:flex;align-items:center;gap:8px;color:#aaa;margin:8px 0 12px}
+.check input{width:auto}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.add-btn{width:auto;padding:11px 15px}
+.edit-btn{background:#d9a83b;color:#111;border:0;padding:10px 14px;font-weight:800}
+.delete-btn{background:#571919;color:#fff;border:0;padding:10px 14px;font-weight:700}
+.gray-btn{background:#222;color:#ddd;border:1px solid #444;padding:10px 14px}
+.status{margin-top:10px;color:#9c9}
+
+/* MOBILE */
+@media(max-width:760px){
+ .side{width:68px;padding:10px 6px}
+ .side h2{font-size:0;text-align:center}
+ .side h2:after{content:"R";font:bold 25px Georgia;color:#d9a83b}
+ .side button,.side a{font-size:0;text-align:center}
+ .side button:before{content:"•";font-size:20px}
+ .main{padding:14px}
+ .cards{grid-template-columns:1fr 1fr}
+ .row{grid-template-columns:1fr}
+ .top{flex-direction:column;align-items:flex-start;gap:8px}
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div id="login" class="login">
+  <div class="login-box">
+    <div class="logo">RAM</div>
+    <p>FULL WEBSITE ADMIN</p>
+    <input id="email" class="field" type="email" placeholder="Admin Email">
+    <input id="password" class="field" type="password" placeholder="Password">
+    <button class="login-btn" onclick="login()">LOGIN</button>
+    <div id="loginMsg" class="login-msg"></div>
+  </div>
+</div>
+
+<!-- ADMIN APP -->
+<div id="app" class="app hidden">
+
+  <aside class="side">
+    <h2>RAM</h2>
+    <button class="active" onclick="showPage('dashboard',this)">Dashboard</button>
+    <button onclick="showPage('home',this)">Home / Hero</button>
+    <button onclick="showPage('stats',this)">Stats</button>
+    <button onclick="showPage('projects',this)">Projects / Proof</button>
+    <button onclick="showPage('offers',this)">Offers</button>
+    <button onclick="showPage('about',this)">About</button>
+    <button onclick="showPage('services',this)">Services</button>
+    <button onclick="showPage('contact',this)">Contact</button>
+    <button onclick="showPage('messages',this)">Messages</button>
+    <button onclick="showPage('settings',this)">Account</button>
+    <a href="index.html">Public Website ↗</a>
+    <button onclick="logout()">Logout</button>
+  </aside>
+
+  <main class="main">
+    <div class="top">
+      <h1 id="pageTitle">Dashboard</h1>
+      <span class="gold">LIVE DATABASE CMS</span>
+    </div>
+    <div id="content"></div>
+  </main>
+
+</div>
+
+<script>
+"use strict";
+
+const db = window.supabase.createClient(
+  window.SUPABASE_URL,
+  window.SUPABASE_ANON_KEY
+);
+
+const $ = id => document.getElementById(id);
+
+function esc(v){
+  return String(v ?? "").replace(/[&<>"']/g, m => ({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#039;"
+  }[m]));
+}
+
+function inputField(label,id,value="",type="text"){
+  return `
+    <label>${esc(label)}</label>
+    <input id="${id}" class="field" type="${type}" value="${esc(value)}">
+  `;
+}
+
+function textField(label,id,value=""){
+  return `
+    <label>${esc(label)}</label>
+    <textarea id="${id}" class="field" rows="4">${esc(value)}</textarea>
+  `;
+}
+
+function showLoginMessage(text){
+  $("loginMsg").textContent = text || "";
+}
+
+async function login(){
+  showLoginMessage("");
+
+  const email = $("email").value.trim();
+  const password = $("password").value;
+
+  if(!email || !password){
+    showLoginMessage("Enter admin email and password.");
+    return;
+  }
+
+  const {error} = await db.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if(error){
+    showLoginMessage(error.message);
+    return;
+  }
+
+  await openApp();
+}
+
+async function openApp(){
+  $("login").classList.add("hidden");
+  $("app").classList.remove("hidden");
+  await showPage("dashboard", document.querySelector(".side button"));
+}
+
+async function logout(){
+  await db.auth.signOut();
+  location.reload();
+}
+
+async function showPage(type,btn){
+  document.querySelectorAll(".side button").forEach(b => b.classList.remove("active"));
+  if(btn) btn.classList.add("active");
+
+  const titles = {
+    dashboard:"Dashboard",
+    home:"Home / Hero",
+    stats:"Stats",
+    projects:"Projects / Proof",
+    offers:"Offers",
+    about:"About",
+    services:"Services",
+    contact:"Contact",
+    messages:"Messages",
+    settings:"Account Settings"
+  };
+
+  $("pageTitle").textContent = titles[type] || "Dashboard";
+
+  if(type === "dashboard") return loadDashboard();
+  if(type === "home") return loadHome();
+  if(type === "stats") return loadStats();
+  if(type === "projects") return loadProjects();
+  if(type === "offers") return loadOffers();
+  if(type === "about") return loadAbout();
+  if(type === "services") return loadServices();
+  if(type === "contact") return loadContact();
+  if(type === "messages") return loadMessages();
+  if(type === "settings") return loadSettings();
+}
+
+/* DASHBOARD */
+async function loadDashboard(){
+  const [p,s,o,m] = await Promise.all([
+    db.from("projects").select("id",{count:"exact",head:true}),
+    db.from("services").select("id",{count:"exact",head:true}),
+    db.from("offers").select("id",{count:"exact",head:true}),
+    db.from("messages").select("id",{count:"exact",head:true})
+  ]);
+
+  $("content").innerHTML = `
+    <div class="cards">
+      <div class="card"><b>${p.count ?? 0}</b>Projects</div>
+      <div class="card"><b>${s.count ?? 0}</b>Services</div>
+      <div class="card"><b>${o.count ?? 0}</b>Offers</div>
+      <div class="card"><b>${m.count ?? 0}</b>Messages</div>
+    </div>
+    <div class="panel">
+      <h2>Live Website Control</h2>
+      <p class="hint">
+        All content changes made here are stored in Supabase.
+        The public website reads the same database.
+      </p>
+    </div>
+  `;
+}
+
+/* SITE CONTENT HELPER */
+async function getSiteContent(){
+  const {data,error} = await db
+    .from("site_content")
+    .select("*")
+    .limit(1)
+    .maybeSingle();
+
+  if(error) throw error;
+  return data || null;
+}
+
+/* HOME */
+async function loadHome(){
+  try{
+    const x = await getSiteContent() || {};
+
+    $("content").innerHTML = `
+      <div class="panel">
+        <h2>Home / Hero</h2>
+        ${inputField("Hero Eyebrow","heroEyebrow",x.hero_eyebrow || "")}
+        ${inputField("Hero Title — use | for gold part","heroTitle",x.hero_title || "")}
+        ${textField("Hero Description","heroDescription",x.hero_description || "")}
+        <button class="save-btn" onclick="saveHome()">SAVE HOME</button>
+      </div>
+    `;
+  }catch(e){
+    showError(e);
+  }
+}
+
+async function saveHome(){
+  try{
+    const row = await getSiteContent();
+    if(!row) return alert("site_content table has no row.");
+
+    const {error} = await db.from("site_content").update({
+      hero_eyebrow:$("heroEyebrow").value,
+      hero_title:$("heroTitle").value,
+      hero_description:$("heroDescription").value
+    }).eq("id",row.id);
+
+    if(error) throw error;
+    alert("Home saved successfully.");
+  }catch(e){ alert(e.message); }
+}
+
+/* STATS */
+async function loadStats(){
+  try{
+    const {data,error} = await db
+      .from("stats")
+      .select("*")
+      .order("sort_order");
+
+    if(error) throw error;
+
+    $("content").innerHTML = `
+      <div class="panel">
+        <h2>Website Stats</h2>
+        <button class="add-btn" onclick="addStat()">+ ADD STAT</button>
+        <div>
+          ${(data || []).map((x,i)=>`
+            <div class="item">
+              <div class="item-title">STAT ${i+1}</div>
+              ${inputField("Value","statValue"+i,x.value)}
+              ${inputField("Label","statLabel"+i,x.label)}
+              ${inputField("Sort Order","statSort"+i,x.sort_order)}
+              <div class="actions">
+                <button class="edit-btn" onclick="editStat('${x.id}',${i})">✏️ EDIT</button>
+                <button class="delete-btn" onclick="deleteStat('${x.id}')">🗑️ DELETE</button>
+              </div>
+            </div>
+          `).join("")}
+        </div>
+      </div>
+    `;
+  }catch(e){ showError(e); }
+}
+
+async function addStat(){
+  const value = prompt("Stat value:","25+");
+  if(value === null) return;
+
+  const label = prompt("Stat label:","PROJECTS");
+  if(label === null) return;
+
+  const sort = prompt("Sort order:","1");
+  if(sort === null) return;
+
+  const {error} = await db.from("stats").insert({
+    value,
+    label,
+    sort_order:Number(sort) || 1
+  });
+
+  if(error) return alert(error.message);
+  await loadStats();
+}
+
+async function editStat(id,i){
+  const {error} = await db.from("stats").update({
+    value:$("statValue"+i).value,
+    label:$("statLabel"+i).value,
+    sort_order:Number($("statSort"+i).value) || 1
+  }).eq("id",id);
+
+  if(error) return alert(error.message);
+  alert("Stat updated.");
+}
+
+async function deleteStat(id){
+  if(!confirm("Delete this stat permanently?")) return;
+
+  const {error} = await db.from("stats").delete().eq("id",id);
+  if(error) return alert(error.message);
+
+  await loadStats();
+}
+
+/* PROJECTS */
+async function loadProjects(){
+  try{
+    const {data,error} = await db
+      .from("projects")
+      .select("*")
+      .order("sort_order");
+
+    if(error) throw error;
+
+    $("content").innerHTML = `
+      <div class="panel">
+        <h2>Website Proof / Projects</h2>
+        <p class="hint">Add, edit, publish/unpublish and delete projects.</p>
+        <button class="add-btn" onclick="addProject()">+ ADD PROJECT</button>
+
+        ${(data || []).map((x,i)=>`
+          <div class="item">
+            <div class="item-title">PROJECT ${i+1}</div>
+            ${inputField("Category","projectCategory"+i,x.category)}
+            ${inputField("Project Title","projectTitle"+i,x.title)}
+            ${textField("Description","projectDescription"+i,x.description || "")}
+            ${inputField("Sort Order","projectSort"+i,x.sort_order)}
+            <label class="check">
+              <input id="projectPublished${i}" type="checkbox" ${x.published ? "checked" : ""}>
+              Published
+            </label>
+            <div class="actions">
+              <button class="edit-btn" onclick="editProject('${x.id}',${i})">✏️ EDIT</button>
+              <button class="delete-btn" onclick="deleteProject('${x.id}')">🗑️ DELETE</button>
+            </div>
+          </div>
+        `).join("")}
+      </div>
+    `;
+  }catch(e){ showError(e); }
+}
+
+async function addProject(){
+  const category = prompt("Project category:","05 • WEBSITE");
+  if(category === null) return;
+
+  const title = prompt("Project title:","New Project");
+  if(title === null) return;
+
+  const description = prompt("Project description:","Project description");
+  if(description === null) return;
+
+  const {error} = await db.from("projects").insert({
+    category,
+    title,
+    description,
+    published:true,
+    sort_order:99
+  });
+
+  if(error) return alert(error.message);
+  await loadProjects();
+}
+
+async function editProject(id,i){
+  const {error} = await db.from("projects").update({
+    category:$("projectCategory"+i).value,
+    title:$("projectTitle"+i).value,
+    description:$("projectDescription"+i).value,
+    published:$("projectPublished"+i).checked,
+    sort_order:Number($("projectSort"+i).value) || 1
+  }).eq("id",id);
+
+  if(error) return alert(error.message);
+  alert("Project updated.");
+}
+
+async function deleteProject(id){
+  if(!confirm("Delete this project permanently?")) return;
+
+  const {error} = await db.from("projects").delete().eq("id",id);
+  if(error) return alert(error.message);
+
+  await loadProjects();
+}
+
+/* OFFERS */
+async function loadOffers(){
+  try{
+    const {data,error} = await db
+      .from("offers")
+      .select("*")
+      .order("sort_order");
+
+    if(error) throw error;
+
+    $("content").innerHTML = `
+      <div class="panel">
+        <h2>Running Offers</h2>
+        <p class="hint">These offers are shown in the public website ticker.</p>
+        <button class="add-btn" onclick="addOffer()">+ ADD OFFER</button>
+
+        ${(data || []).map((x,i)=>`
+          <div class="item">
+            <div class="item-title">OFFER ${i+1}</div>
+            ${textField("Offer Text","offerText"+i,x.text)}
+            ${inputField("Sort Order","offerSort"+i,x.sort_order)}
+            <label class="check">
+              <input id="offerEnabled${i}" type="checkbox" ${x.enabled ? "checked" : ""}>
+              Enabled
+            </label>
+            <div class="actions">
+              <button class="edit-btn" onclick="editOffer('${x.id}',${i})">✏️ EDIT</button>
+              <button class="delete-btn" onclick="deleteOffer('${x.id}')">🗑️ DELETE</button>
+            </div>
+          </div>
+        `).join("")}
+      </div>
+    `;
+  }catch(e){ showError(e); }
+}
+
+async function addOffer(){
+  const text = prompt("Offer text:","🔥 NEW SPECIAL OFFER");
+  if(text === null) return;
+
+  const {error} = await db.from("offers").insert({
+    text,
+    enabled:true,
+    sort_order:99
+  });
+
+  if(error) return alert(error.message);
+  await loadOffers();
+}
+
+async function editOffer(id,i){
+  const {error} = await db.from("offers").update({
+    text:$("offerText"+i).value,
+    enabled:$("offerEnabled"+i).checked,
+    sort_order:Number($("offerSort"+i).value) || 1
+  }).eq("id",id);
+
+  if(error) return alert(error.message);
+  alert("Offer updated.");
+}
+
+async function deleteOffer(id){
+  if(!confirm("Delete this offer permanently?")) return;
+
+  const {error} = await db.from("offers").delete().eq("id",id);
+  if(error) return alert(error.message);
+
+  await loadOffers();
+}
+
+/* SERVICES */
+async function loadServices(){
+  try{
+    const {data,error} = await db
+      .from("services")
+      .select("*")
+      .order("sort_order");
+
+    if(error) throw error;
+
+    $("content").innerHTML = `
+      <div class="panel">
+        <h2>Services</h2>
+        <p class="hint">Add, edit, publish/unpublish and delete services.</p>
+        <button class="add-btn" onclick="addService()">+ ADD SERVICE</button>
+
+        ${(data || []).map((x,i)=>`
+          <div class="item">
+            <div class="item-title">SERVICE ${i+1}</div>
+            ${inputField("Service Name","serviceTitle"+i,x.title)}
+            ${inputField("Sort Order","serviceSort"+i,x.sort_order)}
+            <label class="check">
+              <input id="servicePublished${i}" type="checkbox" ${x.published ? "checked" : ""}>
+              Published
+            </label>
+            <div class="actions">
+              <button class="edit-btn" onclick="editService('${x.id}',${i})">✏️ EDIT</button>
+              <button class="delete-btn" onclick="deleteService('${x.id}')">🗑️ DELETE</button>
+            </div>
+          </div>
+        `).join("")}
+      </div>
+    `;
+  }catch(e){ showError(e); }
+}
+
+async function addService(){
+  const title = prompt("Service name:","NEW SERVICE");
+  if(title === null) return;
+
+  const {error} = await db.from("services").insert({
+    title,
+    published:true,
+    sort_order:99
+  });
+
+  if(error) return alert(error.message);
+  await loadServices();
+}
+
+async function editService(id,i){
+  const {error} = await db.from("services").update({
+    title:$("serviceTitle"+i).value,
+    published:$("servicePublished"+i).checked,
+    sort_order:Number($("serviceSort"+i).value) || 1
+  }).eq("id",id);
+
+  if(error) return alert(error.message);
+  alert("Service updated.");
+}
+
+async function deleteService(id){
+  if(!confirm("Delete this service permanently?")) return;
+
+  const {error} = await db.from("services").delete().eq("id",id);
+  if(error) return alert(error.message);
+
+  await loadServices();
+}
+
+/* ABOUT */
+async function loadAbout(){
+  try{
+    const x = await getSiteContent() || {};
+
+    $("content").innerHTML = `
+      <div class="panel">
+        <h2>About</h2>
+        ${inputField("About Title — use | for gold part","aboutTitle",x.about_title || "")}
+        ${textField("About Text","aboutText",x.about_text || "")}
+        <button class="save-btn" onclick="saveAbout()">SAVE ABOUT</button>
+      </div>
+    `;
+  }catch(e){ showError(e); }
+}
+
+async function saveAbout(){
+  try{
+    const row = await getSiteContent();
+    if(!row) return alert("site_content table has no row.");
+
+    const {error} = await db.from("site_content").update({
+      about_title:$("aboutTitle").value,
+      about_text:$("aboutText").value
+    }).eq("id",row.id);
+
+    if(error) throw error;
+    alert("About saved successfully.");
+  }catch(e){ alert(e.message); }
+}
+
+/* CONTACT */
+async function loadContact(){
+  try{
+    const x = await getSiteContent() || {};
+
+    $("content").innerHTML = `
+      <div class="panel">
+        <h2>Contact</h2>
+        ${inputField("Contact Title — use | for gold part","contactTitle",x.contact_title || "")}
+        ${textField("Contact Text","contactText",x.contact_text || "")}
+        <button class="save-btn" onclick="saveContact()">SAVE CONTACT</button>
+      </div>
+    `;
+  }catch(e){ showError(e); }
+}
+
+async function saveContact(){
+  try{
+    const row = await getSiteContent();
+    if(!row) return alert("site_content table has no row.");
+
+    const {error} = await db.from("site_content").update({
+      contact_title:$("contactTitle").value,
+      contact_text:$("contactText").value
+    }).eq("id",row.id);
+
+    if(error) throw error;
+    alert("Contact saved successfully.");
+  }catch(e){ alert(e.message); }
+}
+
+/* MESSAGES */
+async function loadMessages(){
+  try{
+    const {data,error} = await db
+      .from("messages")
+      .select("*")
+      .order("created_at",{ascending:false});
+
+    if(error) throw error;
+
+    $("content").innerHTML = `
+      <div class="panel">
+        <h2>Message Requests</h2>
+
+        ${
+          data && data.length
+          ?
+          data.map(x=>`
+            <div class="item">
+              <div class="item-title">${esc(x.name)}</div>
+              <p>📱 ${esc(x.phone)}</p>
+              <p>✉️ ${esc(x.email)}</p>
+              <p>${esc(x.message)}</p>
+              <p class="small">${esc(x.created_at)}</p>
+              <button class="delete-btn" onclick="deleteMessage('${x.id}')">
+                🗑️ DELETE MESSAGE
+              </button>
+            </div>
+          `).join("")
+          :
+          `<p class="small">No messages yet.</p>`
+        }
+      </div>
+    `;
+  }catch(e){ showError(e); }
+}
+
+async function deleteMessage(id){
+  if(!confirm("Delete this message permanently?")) return;
+
+  const {error} = await db.from("messages").delete().eq("id",id);
+  if(error) return alert(error.message);
+
+  await loadMessages();
+}
+
+/* SETTINGS */
+async function loadSettings(){
+  try{
+    const {data:{user}} = await db.auth.getUser();
+
+    $("content").innerHTML = `
+      <div class="panel">
+        <h2>Account Settings</h2>
+        <p class="small">Current email: ${esc(user?.email || "")}</p>
+
+        ${inputField("New Email","newEmail",user?.email || "","email")}
+        ${inputField("New Password","newPassword","","password")}
+        ${inputField("Confirm Password","confirmPassword","","password")}
+
+        <button class="save-btn" onclick="saveSettings()">
+          SAVE ACCOUNT
+        </button>
+
+        <p id="settingsStatus" class="status"></p>
+      </div>
+    `;
+  }catch(e){ showError(e); }
+}
+
+async function saveSettings(){
+  const email = $("newEmail").value.trim();
+  const password = $("newPassword").value;
+  const confirmPassword = $("confirmPassword").value;
+
+  if(password && password !== confirmPassword){
+    alert("Passwords do not match.");
+    return;
+  }
+
+  const payload = {};
+
+  if(email) payload.email = email;
+  if(password) payload.password = password;
+
+  if(!Object.keys(payload).length){
+    alert("Nothing to update.");
+    return;
+  }
+
+  const {error} = await db.auth.updateUser(payload);
+
+  if(error){
+    alert(error.message);
+    return;
+  }
+
+  $("settingsStatus").textContent = "Account updated successfully.";
+}
+
+/* ERROR */
+function showError(error){
+  $("content").innerHTML = `
+    <div class="panel">
+      <h2>Error</h2>
+      <p class="hint">${esc(error?.message || "Unknown error")}</p>
+    </div>
+  `;
+}
+
+/* AUTO LOGIN */
+(async function(){
+  const {data:{session}} = await db.auth.getSession();
+
+  if(session){
+    await openApp();
+  }
+})();
+</script>
+
+</body>
+</html>
